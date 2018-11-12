@@ -13,3 +13,6 @@ keras
 broom
 knitr
 datasauRus
+gridExtra
+bindrcpp
+reshape2
