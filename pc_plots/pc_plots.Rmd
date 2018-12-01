@@ -7,20 +7,24 @@ blinded: 0
 authors: 
 - name: Shuofan Zhang
   thanks: The authors gratefully acknowledge ...
-  affiliation: Master student, Monash University
+  affiliation: Research Assistant, Monash University
   
-- name: Di Cook
-  affiliation: Professor of Business Analytics, Department of Econometrics and Business Statistics, Monash University
+- name: Dianne Cook
+  affiliation: Professor of Business Analytics, Monash University
 
 keywords:
-- model diagnosis
-- computer vision
+- Model Diagnosis
+- Computer Vision
+- Deep Learning
 
 abstract: |
   Residuals plots are a primary means to diagnose statistical models. It requires human evaluation to determine if the structure in the plot is consistent with a random variation or not. If not, then the diagnosis is that the model has not adequately captured the relationships between response and explanatory variable in the data. This thesis develops a computer vision model to read residual plots. It compares results with a large database of human evaluations. The evaluations were conducted using a protocol called the "lineup" which places residual plots in a formal framework for statistical hypothesis testing. The comparison between computer and human is made on a very restricted and controlled set of residual plot structures. A new small human subject study is also conducted to compare human vs. computer in reading heteroscedasticity.
 
 bibliography: bibliography.bib
-output: rticles::asa_article
+output: 
+  rticles::asa_article:
+    includes:
+      in_header: preamble.tex
 ---
 
 ```{r setup, include=FALSE}
@@ -31,12 +35,12 @@ library(keras)
 library(broom)
 library(knitr)
 library(datasauRus)
+library(pander)
 ```
 
-\section{Introduction}
-\label{sec:intro}
+# Introduction  
 
-"The multiple regression model for cross-sectional data is still the most widely used vehicle for empirical analysis in economics and other social sciences" [@IE17]. Detecting possible violations of the Gauss-Markov assumptions is crucial to interpreting the data properly, especially in the early stage of analysis. There are several distribution tests that are commonly used, for instance, the Pearson correlation test for detecting linear relationship; the Breusch-Pagan test and White test for investigating heteroskedasticity. But primarily residual plots are the main diagnostic tool and these rely on human evaluation. Because data plots show a lot more information than a single statistic. A good example here would be Anscombe's Quartet. "It is a set of four distinct data sets each consisting of 11 (x,y) pairs where each dataset produces the same summary statistics (mean, standard deviation, and correlation) while producing vastly different plots" [@ANS73]. Matejka and Fitzmaurice also did an interesting study on this issue, they used 'datasaurus' data from @DS16 and generated a series of data with same statistics but very different plots as shown in figure \ref{fig:saurus}. [@JM17]
+<!--background-->The derivation of hypothesis tests and their asymptotic distributions constitute a considerable part of the statistics literature. However, the derivation is often complex and the resulting test may lack power. For example, in time series analysis, the commonly used unit root tests all suffer from low power in distinguishing the unit root null from stationary alternatives. In addition, data plots show a lot more information than a single statistic. A good illustration would be Anscombe's Quartet. "It is a set of four distinct data sets each consisting of 11 (x,y) pairs where each dataset produces the same summary statistics (mean, standard deviation and correlation) while producing vastly different plots" [@ANS73]. Matejka and Fitzmaurice also did an interesting study on this issue, they used 'datasaurus' data from @DS16 and generated a series of data with same statistics but very different plots as shown in figure \ref{fig:saurus} [@JM17]. Instead of using single statistics, if the information in the plots can be utilized in performing hypothesis tests, the power (1-$\beta$) may be improved.
 
 ```{r saurus, fig.width=6, fig.height=7, fig.cap="Each dataset has the same summary statistics to two decimal places: (E(x)=54.26, E(y)=47.83, Pearson’s r=, sd(x)=16.76, sd(y)=26.93"}
 ggplot(datasaurus_dozen, aes(x = x, y = y, colour = dataset)) +
@@ -47,11 +51,7 @@ ggplot(datasaurus_dozen, aes(x = x, y = y, colour = dataset)) +
   facet_wrap( ~ dataset, ncol = 3)
 ```
 
-Steps of constructing computer experiment are discussed in section 2, Turk study (human evaluation) is explained. Section 3 compares computer performance against the database of human evaluation in reading linear relationship. Section 4 contains a short summary and some discussion regarding the future study.
-
-Former studies have shown that human eyes are sensitive to the systematic patterns in data plots. With proper manipulation, visualized plots can be used as test statistics and perform a valid hypothesis test. One example of these protocols that provides inferential validity is called "lineup" which is introduced by @HW10. "The protocol consists of generating 19 null plots (could be other numbers), inserting the plot of the real data in a random location among the null plots and asking the human viewer to single out one of the 20 plots as most different from the others" [@HW10]. If the real plot is chosen, it means the real data is likely to be different from the null hypothesis, so we reject the null hypothesis with 5% chance to be wrong (Type I error). Because if all 20 plots are generated from the null distribution, the chance of one plot being picked is $1/20$ which is 5%. With the assistance of "lineup", we avoid falling into the trap of apophenia where we see patterns in random noise. This protocol has proved to be valid and powerful theoretically as well as practically through human experiments, especially when the assumptions for doing conventional tests are violated [@MM13]. The human factors that may influence visual statistical inference were also investigated by @human2014. The experiments in @human2014 suggest that "individual skills vary substantially, but demographics do not have a huge effect on performance." Although there are some statistically significant factors such as "having a graduate degree" and "living country", the effects of these factors are minimal. These results demonstrate the robustness of the test against different human factors. Figure \ref{fig:lineup} is an example of the lineup. Which plot do you think is the most different? If you choose plot one, we are 95% confident to reject the no-relationship assumption between the two variables, "hp" and "disp" [@SIM18]. The lineup protocol can also be used for other types of testing by choosing different types of plot. For example, normality can be tested using QQ plot; the difference in mean can be tested using box plot; etc.
-
-The question that arises today is whether we can train a computer to read residual plot and make relevant decisions, particularly with a computer vision approach such as deep learning. If this is feasible, we can have the deep learning model process a lot more data than a human can manage. Thus, the cost of rendering visual inference will become much lower.
+<!--relevant study-->Former studies have shown that human eyes are sensitive to the systematic patterns in data plots. With proper manipulation, visualized plots can be used as test statistics and perform a valid hypothesis test. One example of these protocols that provides inferential validity is called "lineup" which was introduced by @HW10. "The protocol consists of generating 19 null plots (could be other numbers), inserting the plot of the real data in a random location among the null plots and asking the human viewer to single out one of the 20 plots as most different from the others" [@HW10]. If the real plot is chosen, it means the real data is likely to be different from the null hypothesis, so we reject the null hypothesis with 5% chance to be wrong (Type I error). Because if all 20 plots are generated from the null distribution, the chance of one plot being picked is $1/20$ which is 5%. With the assistance of "lineup", we avoid falling into the trap of apophenia where we see patterns in random noise. This protocol has been proved to be valid and powerful theoretically as well as practically through human experiments, especially when the assumptions for doing conventional tests are violated [@MM13]. The human factors that may influence visual statistical inference were also investigated by @human2014. The experiments in @human2014 suggest that "individual skills vary substantially, but demographics do not have a huge effect on performance." Although there are some statistically significant factors such as "having a graduate degree" and "living country", the effects of these factors are minimal. These results demonstrate the robustness of the test against different human factors. Figure \ref{fig:lineup} is an example of the lineup. Which plot do you think is the most different? If you choose plot one, we are 95% confident to reject the no-relationship assumption between the two variables, "hp" and "disp" [@SIM18]. The lineup protocol can also be used for other types of testing by choosing different types of plot. For example, normality can be tested using QQ plot; the difference in mean can be tested using box plot.
 
 ```{r lineup, message=FALSE, fig.cap="Scatterplot lineup example: one plot is the data, the rest are generated from a null model assuming no relationship between the two variables. In this lineup it is easy to see that plot 1, which is the data plot, is different from the rest.", fig.height=6, fig.width=6}
 lineup_data_mtcars <- lineup(null_permute("hp"), mtcars, pos = 1)
@@ -61,22 +61,19 @@ ggplot(lineup_data_mtcars, aes(disp, hp)) +
   facet_wrap(~ .sample)
 ```
 
-The motivation for the task is provided in a blog post by Giora Simchoni [@SIM18]. He has designed a deep learning model to test the significance of the linear relationship between two variables for samples of size 50. The model reached over 93% accuracy on unseen test data. He also mentioned that the computer fails to pick up a strong non-linear relationship even though the Pearson'r is as high as -0.84 [@SIM18]. So the short conclusion is the computer vision is not perfect, in that it is not as flexible as human vision. As Simchoni explained in his article, the model can only distinguish linear relationship from no-relationship as trained. However, we think this fact is just another example reflecting the importance of visualization as we discussed above. A strong correlation does not necessarily mean a linear relationship. We should always refer to the plot before making any statement. What's more, if we want the model to be more flexible, we could simply adjust our design of training accordingly. Therefore, in this article, we are trying to further Simchoni's study. More specifically, we will build a computer model to perform the hypothesis tests as follows. 
-The hypothesis test is:
+<!--our study-->The question that arises today is whether the human evaluation can be aided and supplemented by computer. If it is feasible, we can have a computer process a lot more data than a human can manage. Thus, the cost of rendering visual inference will become much lower. Therefore, in this study, we introduce the computer vision technique to test the null of no structure against linear patterns in a scatter plot, as an alternative to the conventional $t$-test. To be more specific, the hypothesis we are trying to test is:
 
-$H_0$: There are no relationships between the two variables.
+$H_0$: There are no relationships between the two variables in the scatter plot.
 
-$H_1$: There is a linear relationship between the two variables where all Gauss-Markov assumptions are met.
-<!--
-The second hypothesis test is:
+$H_1$: There is a linear relationship between the two variables in the scatter plot where all Gauss-Markov assumptions are met.
 
-$H_0$: There is a linear relationship between the two variables where all Gauss-Markov assumptions are met.
+The accuracy of the computer model is compared to both a database of human evaluations from @MM13 and the $t$-test. The motivation for the task is provided in a blog post by Giora Simchoni [@SIM18]. He has designed a deep learning model to test the significance of the linear relationship between two variables for samples of size 50. The model reached over 93% accuracy on unseen test data. He also mentioned that the computer fails to pick up a strong non-linear relationship even though the Pearson'r is as high as -0.84 [@SIM18]. As Simchoni explained in his article, the model can only distinguish linear relationship from no-relationship as trained. However, we think this fact is just another example reflecting the importance of visualization as we discussed above. A strong correlation does not necessarily mean a linear relationship. We should always refer to the plot before making any statement. In addition, if we require the model to be more flexible, it can be realised by adjusting the training design accordingly.
 
-$H_1$: There is a linear relationship between the two variables where the variance of the error term is not a constant while all other Gauss-Markov assumptions are met.
--->
-For ease of exposition, only the regression model with one explanatory variable will be considered in this paper, but many of the results can be generalized to other cases including multiple regression model. Because the "statistics" we will use is the scatterplot, in terms of teaching the computer reading the plot, one variable is enough to generate different patterns in that plot for the deep learning model to learn. And this makes the design process much simpler. 
+# Experimental Methods  
 
-The model we will use is the convolutional neural networks, also known as convnets, a type of deep-learning model "almost universally used in computer vision applications" [@DLR18]. The very first convolutional neural networks, called the "LeNet5" which was born in 1994, propelled the field of deep learning. However, this technique was in incubation from 1998 to 2010. In recent years, with the increasing data availability and more advanced technology, the design of the neural network architecture became more and more successful. Many types of neural network architectures have been developed since then, such as the "Dan Ciresan Net" which enabled the implementation of GPU for the first time, and the "AlexNet" which used the so-called "ReLU" function as the activation function and started a small revolution in the deep learning world, etc. [@cnn2017] Basically convolutional neural networks has two interesting properties: "the patterns they learn are translation invariant", and "they can learn spatial hierarchies of patterns" [@DLR18]. The first property implies that once the model learns how to recognize the linear patterns, it can detect these patterns regardless of their direction, thus handling negative/positive relationship automatically in our case. 
+For ease of exposition, only the simple regression model is considered in this paper, but many of the results can be generalized to other cases including multiple regression models. Because the "statistics" we use is the scatterplot, in terms of teaching the computer to recognize linear patterns from others, one variable is enough to generate different patterns. And this makes the design process much simpler. 
+
+The model we use is the convolutional neural networks, also known as convnets, a type of deep-learning model "almost universally used in computer vision applications" [@DLR18]. The very first convolutional neural networks, called the "LeNet5" which was born in 1994, propelled the field of deep learning. However, this technique was in incubation from 1998 to 2010. In recent years, with the increasing data availability and more advanced technology, the design of the neural network architecture became more and more successful. Many types of neural network architectures have been developed since then, such as the "Dan Ciresan Net" which enabled the implementation of GPU for the first time, and the "AlexNet" which used the so-called "ReLU" function as the activation function and started a small revolution in the deep learning world, etc. [@cnn2017] Basically convolutional neural networks has two interesting properties: "the patterns they learn are translation invariant", and "they can learn spatial hierarchies of patterns" [@DLR18]. The first property implies that once the model learns how to recognize the linear patterns, it can detect these patterns regardless of their direction, thus handling negative/positive relationship automatically in our case. 
 
 Unlike the classical programming where human input rules, in deep learning paradigm, we provide data and the answers associated with the data. Deep learning algorithm will output the rules, and these rules can then be used on new data to make predictions. To make our life easier, we can also think of the deep learning neural network as a complex nonlinear model which could estimate millions of parameters ($\textbf{w}$) with a big enough dataset. As usual regression problem, to get the estimates of unknown parameters ($\textbf{w}$), we need to provide the model with the dependent variable ($y_i$) and the independent variables ($\textbf{x}_i$). In this case, the independent variable will be the images of data plots (in forms of matrices) simulated from the null distribution and the alternative distribution, and dependent variable will be the labels of that plot indicating the true relationship of the original data. Once we have the estimated parameters ($\hat{\textbf{w}}$), we then can use them to classify unseen data plots, e.g. to perform a hypothesis test.
 
@@ -104,14 +101,10 @@ The main procedures of the human evaluating lineup are given in figure \ref{dghm
 \label{dghm}
 \end{figure*}
 
-\section{Experimental Methods}
-\label{sec:experiment}
+## Comparing computer performance against the database of human evaluation
 
-# Comparing computer performance against the database of human evaluation
 
-A database of human evaluations of scatterplots is available from prior studies. This is used to compare the performance of the computer model. The computer model is trained on a broader parameter simulation framework and tested on the same data as the human evaluations. 
-
-## Amazon Mechanical Turk study
+### Amazon Mechanical Turk study
 
 \begin{figure*}[h]
 \centerline{\includegraphics[width=15cm]{figures/plot_turk2_300_350_12_3.png}}
@@ -144,10 +137,12 @@ c1 <- c(100,100,300,300)
 c2 <- c(5,12,5,12)
 c3 <- c("0,1,3,5,8", "1,3,8,10,16", "0,1,2,3,5", "1,3,5,7,10")
 c4 <- c("0.25, 0.75, 1.25, 1.75, 2.75", "0.5, 1.5, 3.5, 4.5, 6", "0.1, 0.4, 0.7, 1, 1.5","0, 0.8, 1.75, 2.3, 3.5")
-tibble(c1,c2,c3,c4) %>% kable(col.names = c("Sample size (n)", "Error SD(sigma)", "Experiment 1 beta2", "Experiment 2 beta1"), align = "c", caption = "Combination of parameter values used for simulation in Turk's study.")
+turkt = tibble(c1,c2,c3,c4)
+colnames(turkt) = c("Sample size (n)", "Error SD(sigma)", "Experiment 1 beta2", "Experiment 2 beta1")
+pander(turkt, caption = "Combination of parameter values used for simulation in Turk's study.")
 ```
 
-## Linear relationship simulation
+### Linear relationship simulation
 
 The design for our model under the alternative hypothesis in the first experiment is similar to what @SIM18 did in his blog. But the parameters are tailored to compare the computer performance with the Turk study results.
 
@@ -222,7 +217,7 @@ scap_sigma_n <- ggplot(data = parameters_b, aes(x=n,y=sigma)) + geom_point(shape
 grid.arrange(hist_n_l, hist_b_l, hist_s_l, hist_p_l, scap_beta_n, scap_sigma_n, ncol=2)
 ```
 
-## Null plot simulation
+### Null plot simulation
 
 This is the null scenario in our first experiment, eg. the two variables under tested are independent of each other. If the data arise from this situation, then the data plots will not show any systematic patterns theoretically. It is true that there must be some undesired patterns formed out of randomness, especially when the sample size is small. Unlike what Simchoni did in his post, no conventional tests will be used to sort out the "significant/insignificant" samples. Because the answer to the question that if the deep learning model can distinguish from patterns formed by chance and by nature is also interesting. The model is designed the same as the linear model:
 $$Y_i = \beta_0 + \beta_1 X_{i}  + \varepsilon_i, ~~i=1, \dots , n$$
@@ -269,7 +264,7 @@ scap_sigma_n0 <- ggplot(data = parameters_0, aes(x=n,y=sigma)) + geom_point(shap
 grid.arrange(hist_n_0, hist_s_0, hist_p_0, scap_sigma_n0, ncol=2)
 ```
 
-## Computer model
+### Computer model
 
 All convolutional neural network related work is done by the Keras [@keras] package in R [@R], which interfaces to the python software. The plots used for training and testing in this section is the scatterplot between the dependent variable Y and the independent variable X. It can also be considered as the residual plot of such data fitting to a constant model. The R package ggplot2 [@ggplot2] is used to generate the plots. All plots are resized to $150\times 150$ pixel and saved as png. This size is similar to the plot size used in the lineup for human evaluation. As for the labels given to each image, we use the true population as the samples' identification directly.
 
@@ -300,7 +295,7 @@ model <- keras_model_sequential() %>%
 
 \begin{figure*}[h]
 \centerline{\includegraphics[width=15cm]{figures/modelstruc.png}}
-\caption{The deep learning model structure used for both of the experiments.}
+\caption{The deep learning model structure used for the experiments.}
 \label{modelstruc}
 \end{figure*}
 
@@ -359,7 +354,9 @@ tests <- c("Human 5%", "Human 2%", "T-test 5%", "Computer 2%", "T-test 2%")
 rank <- c(1,1,2,3,4)
 correct <- c(47, 47, 43, 39, 39)
 accuracy <- c(0.6714,0.6714, 0.6143, 0.5571, 0.5571)
-tibble(rank, tests, correct, accuracy) %>% kable(col.names = c("Rank","Tests", "No. of correct", "Accuracy"), caption = "Accuracy of testing the 70 data plots evaluated by human computer and the conventional t-test.")
+lrst = tibble(rank, tests, correct, accuracy)
+colnames(lrst) = c("Rank","Tests", "No. of correct", "Accuracy")
+pander(lrst, caption = "Accuracy of testing the 70 data plots evaluated by human computer and the conventional t-test.")
 ```
 
 ## Aside discussion

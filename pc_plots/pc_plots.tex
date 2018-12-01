@@ -65,6 +65,8 @@
 \newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
 \newcommand{\NormalTok}[1]{#1}
 
+\usepackage{longtable}
+\usepackage{booktabs}
 
 \begin{document}
 
@@ -83,8 +85,7 @@
         Shuofan Zhang \thanks{The authors gratefully acknowledge \ldots{}} \\
     Master student, Monash University\\
      and \\     Di Cook \\
-    Professor of Business Analytics, Department of Econometrics and Business
-    Statistics, Monash University\\
+    Professor of Business Analytics\\
       }
   \maketitle
 } \fi
@@ -325,7 +326,7 @@ under the alternative hypothesis and the null hypothesis respectively.
 \section{Experimental Methods}
 \label{sec:experiment}
 
-\section{Comparing computer performance against the database of human
+\subsection{Comparing computer performance against the database of human
 evaluation}\label{comparing-computer-performance-against-the-database-of-human-evaluation}
 
 A database of human evaluations of scatterplots is available from prior
@@ -333,7 +334,7 @@ studies. This is used to compare the performance of the computer model.
 The computer model is trained on a broader parameter simulation
 framework and tested on the same data as the human evaluations.
 
-\subsection{Amazon Mechanical Turk
+\subsubsection{Amazon Mechanical Turk
 study}\label{amazon-mechanical-turk-study}
 
 \begin{figure*}[h]
@@ -398,27 +399,83 @@ selected the data plot (position 20) from the null plots. There is clear
 evidence that the data displayed in plot 20 is not from
 \(H_o: \beta_k=0\).
 
-\begin{longtable}[]{@{}cccc@{}}
+\begin{longtable}[]{@{}ccc@{}}
 \caption{Combination of parameter values used for simulation in Turk's
-study.}\tabularnewline
+study. (continued below)}\tabularnewline
 \toprule
-Sample size (n) & Error SD(sigma) & Experiment 1 beta2 & Experiment 2
-beta1\tabularnewline
+\begin{minipage}[b]{0.23\columnwidth}\centering\strut
+Sample size (n)\strut
+\end{minipage} & \begin{minipage}[b]{0.23\columnwidth}\centering\strut
+Error SD(sigma)\strut
+\end{minipage} & \begin{minipage}[b]{0.25\columnwidth}\centering\strut
+Experiment 1 beta2\strut
+\end{minipage}\tabularnewline
 \midrule
 \endfirsthead
 \toprule
-Sample size (n) & Error SD(sigma) & Experiment 1 beta2 & Experiment 2
-beta1\tabularnewline
+\begin{minipage}[b]{0.23\columnwidth}\centering\strut
+Sample size (n)\strut
+\end{minipage} & \begin{minipage}[b]{0.23\columnwidth}\centering\strut
+Error SD(sigma)\strut
+\end{minipage} & \begin{minipage}[b]{0.25\columnwidth}\centering\strut
+Experiment 1 beta2\strut
+\end{minipage}\tabularnewline
 \midrule
 \endhead
-100 & 5 & 0,1,3,5,8 & 0.25, 0.75, 1.25, 1.75, 2.75\tabularnewline
-100 & 12 & 1,3,8,10,16 & 0.5, 1.5, 3.5, 4.5, 6\tabularnewline
-300 & 5 & 0,1,2,3,5 & 0.1, 0.4, 0.7, 1, 1.5\tabularnewline
-300 & 12 & 1,3,5,7,10 & 0, 0.8, 1.75, 2.3, 3.5\tabularnewline
+\begin{minipage}[t]{0.23\columnwidth}\centering\strut
+100\strut
+\end{minipage} & \begin{minipage}[t]{0.23\columnwidth}\centering\strut
+5\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\centering\strut
+0,1,3,5,8\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.23\columnwidth}\centering\strut
+100\strut
+\end{minipage} & \begin{minipage}[t]{0.23\columnwidth}\centering\strut
+12\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\centering\strut
+1,3,8,10,16\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.23\columnwidth}\centering\strut
+300\strut
+\end{minipage} & \begin{minipage}[t]{0.23\columnwidth}\centering\strut
+5\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\centering\strut
+0,1,2,3,5\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.23\columnwidth}\centering\strut
+300\strut
+\end{minipage} & \begin{minipage}[t]{0.23\columnwidth}\centering\strut
+12\strut
+\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\centering\strut
+1,3,5,7,10\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
-\subsection{Linear relationship
+\begin{longtable}[]{@{}c@{}}
+\toprule
+\begin{minipage}[b]{0.40\columnwidth}\centering\strut
+Experiment 2 beta1\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.40\columnwidth}\centering\strut
+0.25, 0.75, 1.25, 1.75, 2.75\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.40\columnwidth}\centering\strut
+0.5, 1.5, 3.5, 4.5, 6\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.40\columnwidth}\centering\strut
+0.1, 0.4, 0.7, 1, 1.5\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.40\columnwidth}\centering\strut
+0, 0.8, 1.75, 2.3, 3.5\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsubsection{Linear relationship
 simulation}\label{linear-relationship-simulation}
 
 The design for our model under the alternative hypothesis in the first
@@ -482,7 +539,7 @@ simulation, for computer model training. Good coverage is obtained
 across the parameter space.}
 \end{figure}
 
-\subsection{Null plot simulation}\label{null-plot-simulation}
+\subsubsection{Null plot simulation}\label{null-plot-simulation}
 
 This is the null scenario in our first experiment, eg. the two variables
 under tested are independent of each other. If the data arise from this
@@ -528,7 +585,7 @@ for computer model training. Good coverage is obtained across the
 parameter space.}
 \end{figure}
 
-\subsection{Computer model}\label{computer-model}
+\subsubsection{Computer model}\label{computer-model}
 
 All convolutional neural network related work is done by the Keras
 \citep{keras} package in R \citep{R}, which interfaces to the python
@@ -701,22 +758,78 @@ from the human evaluation is robust to smaller p-values; 5\% significant
 t-test is the second best, 2\% significant t-test and the computer model
 give the same results.
 
-\begin{longtable}[]{@{}rlrr@{}}
+\begin{longtable}[]{@{}cccc@{}}
 \caption{Accuracy of testing the 70 data plots evaluated by human
 computer and the conventional t-test.}\tabularnewline
 \toprule
-Rank & Tests & No. of correct & Accuracy\tabularnewline
+\begin{minipage}[b]{0.09\columnwidth}\centering\strut
+Rank\strut
+\end{minipage} & \begin{minipage}[b]{0.17\columnwidth}\centering\strut
+Tests\strut
+\end{minipage} & \begin{minipage}[b]{0.21\columnwidth}\centering\strut
+No. of correct\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+Accuracy\strut
+\end{minipage}\tabularnewline
 \midrule
 \endfirsthead
 \toprule
-Rank & Tests & No. of correct & Accuracy\tabularnewline
+\begin{minipage}[b]{0.09\columnwidth}\centering\strut
+Rank\strut
+\end{minipage} & \begin{minipage}[b]{0.17\columnwidth}\centering\strut
+Tests\strut
+\end{minipage} & \begin{minipage}[b]{0.21\columnwidth}\centering\strut
+No. of correct\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering\strut
+Accuracy\strut
+\end{minipage}\tabularnewline
 \midrule
 \endhead
-1 & Human 5\% & 47 & 0.6714\tabularnewline
-1 & Human 2\% & 47 & 0.6714\tabularnewline
-2 & T-test 5\% & 43 & 0.6143\tabularnewline
-3 & Computer 2\% & 39 & 0.5571\tabularnewline
-4 & T-test 2\% & 39 & 0.5571\tabularnewline
+\begin{minipage}[t]{0.09\columnwidth}\centering\strut
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\centering\strut
+Human 5\%\strut
+\end{minipage} & \begin{minipage}[t]{0.21\columnwidth}\centering\strut
+47\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.6714\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.09\columnwidth}\centering\strut
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\centering\strut
+Human 2\%\strut
+\end{minipage} & \begin{minipage}[t]{0.21\columnwidth}\centering\strut
+47\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.6714\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.09\columnwidth}\centering\strut
+2\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\centering\strut
+T-test 5\%\strut
+\end{minipage} & \begin{minipage}[t]{0.21\columnwidth}\centering\strut
+43\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.6143\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.09\columnwidth}\centering\strut
+3\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\centering\strut
+Computer 2\%\strut
+\end{minipage} & \begin{minipage}[t]{0.21\columnwidth}\centering\strut
+39\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.5571\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.09\columnwidth}\centering\strut
+4\strut
+\end{minipage} & \begin{minipage}[t]{0.17\columnwidth}\centering\strut
+T-test 2\%\strut
+\end{minipage} & \begin{minipage}[t]{0.21\columnwidth}\centering\strut
+39\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering\strut
+0.5571\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
