@@ -83,9 +83,9 @@
 
   \author{
         Shuofan Zhang \thanks{The authors gratefully acknowledge \ldots{}} \\
-    Master student, Monash University\\
-     and \\     Di Cook \\
-    Professor of Business Analytics\\
+    Research Assistant, Monash University\\
+     and \\     Dianne Cook \\
+    Professor of Business Analytics, Monash University\\
       }
   \maketitle
 } \fi
@@ -118,33 +118,31 @@ conducted to compare human vs.~computer in reading heteroscedasticity.
 \end{abstract}
 
 \noindent%
-{\it Keywords:} model diagnosis, computer vision
+{\it Keywords:} Model Diagnosis, Computer Vision, Deep Learning
 \vfill
 
 \newpage
 \spacingset{1.45} % DON'T change the spacing!
 
-\section{Introduction}
-\label{sec:intro}
+\section{Introduction}\label{introduction}
 
-``The multiple regression model for cross-sectional data is still the
-most widely used vehicle for empirical analysis in economics and other
-social sciences'' \citep{IE17}. Detecting possible violations of the
-Gauss-Markov assumptions is crucial to interpreting the data properly,
-especially in the early stage of analysis. There are several
-distribution tests that are commonly used, for instance, the Pearson
-correlation test for detecting linear relationship; the Breusch-Pagan
-test and White test for investigating heteroskedasticity. But primarily
-residual plots are the main diagnostic tool and these rely on human
-evaluation. Because data plots show a lot more information than a single
-statistic. A good example here would be Anscombe's Quartet. ``It is a
-set of four distinct data sets each consisting of 11 (x,y) pairs where
-each dataset produces the same summary statistics (mean, standard
-deviation, and correlation) while producing vastly different plots''
-\citep{ANS73}. Matejka and Fitzmaurice also did an interesting study on
-this issue, they used `datasaurus' data from \citet{DS16} and generated
-a series of data with same statistics but very different plots as shown
-in figure \ref{fig:saurus}. \citep{JM17}
+The derivation of hypothesis tests and their asymptotic distributions
+constitute a considerable part of the statistics literature. However,
+the derivation is often complex and the resulting test may lack power.
+For example, in time series analysis, the commonly used unit root tests
+all suffer from low power in distinguishing the unit root null from
+stationary alternatives. In addition, data plots show a lot more
+information than a single statistic. A good illustration would be
+Anscombe's Quartet. \emph{``It is a set of four distinct data sets each
+consisting of 11 (x,y) pairs where each dataset produces the same
+summary statistics (mean, standard deviation and correlation) while
+producing vastly different plots''} \citep{ANS73}. Matejka and
+Fitzmaurice also did an interesting study on this issue, they used
+`datasaurus' data from \citet{DS16} and generated a series of data with
+same statistics but very different plots as shown in figure 1
+\citep{JM17}. Instead of using single statistics, if the information in
+the plots can be utilized in performing hypothesis tests, the power
+(1-\(\beta\)) may be improved.
 
 \begin{figure}
 \centering
@@ -153,51 +151,36 @@ in figure \ref{fig:saurus}. \citep{JM17}
 places: (E(x)=54.26, E(y)=47.83, Pearson's r=, sd(x)=16.76, sd(y)=26.93}
 \end{figure}
 
-Steps of constructing computer experiment are discussed in section 2,
-Turk study (human evaluation) is explained. Section 3 compares computer
-performance against the database of human evaluation in reading linear
-relationship. Section 4 contains a short summary and some discussion
-regarding the future study.
-
 Former studies have shown that human eyes are sensitive to the
 systematic patterns in data plots. With proper manipulation, visualized
 plots can be used as test statistics and perform a valid hypothesis
 test. One example of these protocols that provides inferential validity
-is called ``lineup'' which is introduced by \citet{HW10}. ``The protocol
-consists of generating 19 null plots (could be other numbers), inserting
-the plot of the real data in a random location among the null plots and
-asking the human viewer to single out one of the 20 plots as most
-different from the others'' \citep{HW10}. If the real plot is chosen, it
-means the real data is likely to be different from the null hypothesis,
-so we reject the null hypothesis with 5\% chance to be wrong (Type I
-error). Because if all 20 plots are generated from the null
-distribution, the chance of one plot being picked is \(1/20\) which is
-5\%. With the assistance of ``lineup'', we avoid falling into the trap
-of apophenia where we see patterns in random noise. This protocol has
-proved to be valid and powerful theoretically as well as practically
-through human experiments, especially when the assumptions for doing
-conventional tests are violated \citep{MM13}. The human factors that may
-influence visual statistical inference were also investigated by
-\citet{human2014}. The experiments in \citet{human2014} suggest that
-``individual skills vary substantially, but demographics do not have a
-huge effect on performance.'' Although there are some statistically
-significant factors such as ``having a graduate degree'' and ``living
-country'', the effects of these factors are minimal. These results
-demonstrate the robustness of the test against different human factors.
-Figure \ref{fig:lineup} is an example of the lineup. Which plot do you
-think is the most different? If you choose plot one, we are 95\%
-confident to reject the no-relationship assumption between the two
-variables, ``hp'' and ``disp'' \citep{SIM18}. The lineup protocol can
-also be used for other types of testing by choosing different types of
-plot. For example, normality can be tested using QQ plot; the difference
-in mean can be tested using box plot; etc.
-
-The question that arises today is whether we can train a computer to
-read residual plot and make relevant decisions, particularly with a
-computer vision approach such as deep learning. If this is feasible, we
-can have the deep learning model process a lot more data than a human
-can manage. Thus, the cost of rendering visual inference will become
-much lower.
+is called ``lineup'' which was introduced by \citet{HW10}. \emph{``The
+protocol consists of generating 19 null plots (could be other numbers),
+inserting the plot of the real data in a random location among the null
+plots and asking the human viewer to single out one of the 20 plots as
+most different from the others''} \citep{HW10}. If the real plot is
+chosen, it means the real data is likely to be different from the null
+hypothesis, so we reject the null hypothesis with 5\% chance to be wrong
+(Type I error). Because if all 20 plots are generated from the null
+distribution, the chance of one plot being picked is \(1/20\). With the
+assistance of ``lineup'', we avoid falling into the trap of apophenia
+where we see patterns in random noise. This protocol has been proved to
+be valid and powerful theoretically as well as practically through human
+experiments \citep{MM13}. The human factors that may influence visual
+statistical inference were also investigated by \citet{human2014}. The
+experiments in \citet{human2014} suggest that \emph{``individual skills
+vary substantially, but demographics do not have a huge effect on
+performance.''} Although there are some statistically significant
+factors such as ``having a graduate degree'' and ``living country'', the
+effects of these factors are minimal. These results demonstrate the
+robustness of the test against different human factors. Figure 2 is an
+example of the lineup. Which plot do you think is the most different? If
+you choose plot one, we are 95\% confident to reject the no-relationship
+assumption between the two variables, ``hp'' and ``disp'' \citep{SIM18}.
+The lineup protocol can also be used for other types of testing by
+choosing different types of plot. For example, normality can be tested
+using QQ plot; the difference in mean can be tested using box plot.
 
 \begin{figure}
 \centering
@@ -208,153 +191,53 @@ variables. In this lineup it is easy to see that plot 1, which is the
 data plot, is different from the rest.}
 \end{figure}
 
-The motivation for the task is provided in a blog post by Giora Simchoni
-\citep{SIM18}. He has designed a deep learning model to test the
-significance of the linear relationship between two variables for
-samples of size 50. The model reached over 93\% accuracy on unseen test
-data. He also mentioned that the computer fails to pick up a strong
-non-linear relationship even though the Pearson'r is as high as -0.84
-\citep{SIM18}. So the short conclusion is the computer vision is not
-perfect, in that it is not as flexible as human vision. As Simchoni
+The question that arises today is whether the human evaluation can be
+aided and supplemented by computer. If it is feasible, we can have a
+computer process a lot more data than a human can manage. Thus, the cost
+of rendering visual inference will become much lower. Therefore, in this
+study, we introduce the computer vision technique to test the null of no
+structure against linear patterns in a scatter plot, as an alternative
+to the conventional \(t\)-test. To be more specific, the hypothesis we
+are trying to test is:
+
+\(H_0\): There are no relationships between the two variables in the
+scatter plot.
+
+\(H_1\): There is a linear relationship between the two variables in the
+scatter plot where all Gauss-Markov assumptions are met.
+
+The accuracy of the computer model is compared to both a database of
+human evaluations from \citet{MM13} and the \(t\)-test. The motivation
+for the task is provided in a blog post by Giora Simchoni \citep{SIM18}.
+He has designed a deep learning model to test the significance of the
+linear relationship between two variables for samples of size 50. The
+model reached over 93\% accuracy on unseen test data. He also mentioned
+that the computer failed to pick up a strong non-linear relationship
+even though the Pearson'r is as high as -0.84 \citep{SIM18}. As Simchoni
 explained in his article, the model can only distinguish linear
 relationship from no-relationship as trained. However, we think this
 fact is just another example reflecting the importance of visualization
 as we discussed above. A strong correlation does not necessarily mean a
 linear relationship. We should always refer to the plot before making
-any statement. What's more, if we want the model to be more flexible, we
-could simply adjust our design of training accordingly. Therefore, in
-this article, we are trying to further Simchoni's study. More
-specifically, we will build a computer model to perform the hypothesis
-tests as follows. The hypothesis test is:
+any statement. In addition, if we require the model to be more flexible,
+it can be realised by adjusting the training design accordingly.
 
-\(H_0\): There are no relationships between the two variables.
+\section{Experimental Methods}\label{experimental-methods}
 
-\(H_1\): There is a linear relationship between the two variables where
-all Gauss-Markov assumptions are met. For ease of exposition, only the
-regression model with one explanatory variable will be considered in
-this paper, but many of the results can be generalized to other cases
-including multiple regression model. Because the ``statistics'' we will
-use is the scatterplot, in terms of teaching the computer reading the
-plot, one variable is enough to generate different patterns in that plot
-for the deep learning model to learn. And this makes the design process
-much simpler.
+\subsection{The Human Evaluation}\label{the-human-evaluation}
 
-The model we will use is the convolutional neural networks, also known
-as convnets, a type of deep-learning model ``almost universally used in
-computer vision applications'' \citep{DLR18}. The very first
-convolutional neural networks, called the ``LeNet5'' which was born in
-1994, propelled the field of deep learning. However, this technique was
-in incubation from 1998 to 2010. In recent years, with the increasing
-data availability and more advanced technology, the design of the neural
-network architecture became more and more successful. Many types of
-neural network architectures have been developed since then, such as the
-``Dan Ciresan Net'' which enabled the implementation of GPU for the
-first time, and the ``AlexNet'' which used the so-called ``ReLU''
-function as the activation function and started a small revolution in
-the deep learning world, etc. \citep{cnn2017} Basically convolutional
-neural networks has two interesting properties: ``the patterns they
-learn are translation invariant'', and ``they can learn spatial
-hierarchies of patterns'' \citep{DLR18}. The first property implies that
-once the model learns how to recognize the linear patterns, it can
-detect these patterns regardless of their direction, thus handling
-negative/positive relationship automatically in our case.
-
-Unlike the classical programming where human input rules, in deep
-learning paradigm, we provide data and the answers associated with the
-data. Deep learning algorithm will output the rules, and these rules can
-then be used on new data to make predictions. To make our life easier,
-we can also think of the deep learning neural network as a complex
-nonlinear model which could estimate millions of parameters
-(\(\textbf{w}\)) with a big enough dataset. As usual regression problem,
-to get the estimates of unknown parameters (\(\textbf{w}\)), we need to
-provide the model with the dependent variable (\(y_i\)) and the
-independent variables (\(\textbf{x}_i\)). In this case, the independent
-variable will be the images of data plots (in forms of matrices)
-simulated from the null distribution and the alternative distribution,
-and dependent variable will be the labels of that plot indicating the
-true relationship of the original data. Once we have the estimated
-parameters (\(\hat{\textbf{w}}\)), we then can use them to classify
-unseen data plots, e.g.~to perform a hypothesis test.
-
-The architecture used in this study is a fundamental one. The estimation
-method for the deep-learning model is called ``backpropagation''
-algorithm which is a way to train chains of parametric operations using
-gradient-descent optimization. The gradient-descent optimizer is meant
-to find the set of parameters such that the cost function reaches its
-minimum. The form of the cost functions or loss function is determined
-per each question. In both two experiments conducted in this paper, the
-deep learning model is expected to complete binary classification task,
-e.g.~tell ``linearly correlated'' variables from ``independent''
-variables for the first experiment, tell ``heteroskedasticity errors''
-from ``normal errors'' for the second experiment. As introduced by
-\citet{DLR18}, ``crossentropy is usually the best choice (as the loss
-function) when you're dealing with models that output probabilities''.
-Originated from Information Theory, crossentropy is a quantity measuring
-the distance between probability distributions. In deep learning world,
-it measures the distance between the true distribution and the
-predictions. Therefore, in this paper, the binary crossentropy loss
-function will be used. The associated cost function is of the form,
-\[J(\textbf{w})=- \frac{1}{N}\sum_{i=1}^N\left(  
-\ y_i\ log\hat{y_i}+(1-y_i)\ log(1-\hat{y_i})  
-\right)\] where
-\(\hat{y_i} = g(\textbf{w} \times \textbf{x}_i) = \frac{1}{1+e^{-\textbf{w} \times \textbf{x}_i}}\)
-and \(g(z)\) is the logistic function.
-
-The main procedures involved in constructing and selecting a convnets
-model are shown in figure \ref{dgpc}. The convnets is trained on
-``train'' and ``validation'' set. A certain number of iterations over
-all samples are done, the fitted convnets given by each iteration are
-saved, one best model is chosen as the representative for the computer
-according to the overall accuracy on the unseen ``test'' set.
-
-The main procedures of the human evaluating lineup are given in figure
-\ref{dghm}. ``Real data'' and ``null data'' stand for datasets simulated
-under the alternative hypothesis and the null hypothesis respectively.
-
-\begin{figure*}[h]
-\centerline{\includegraphics[width=15cm]{figures/diagpc.png}}
-\caption{Diagram illustrating the training, diagnosis and choice of the computer model. Based on 480,000 simulated data sets used to create $150\times 150$ pixel images, divided into train, validation and test sets.}
-\label{dgpc}
-\end{figure*}
-
-\begin{figure*}[h]
-\centerline{\includegraphics[width=15cm]{figures/diaghm.png}}
-\caption{Diagram illustrating the process of human subject evaluation of lineups, and how performance is computed.}
-\label{dghm}
-\end{figure*}
-
-\section{Experimental Methods}
-\label{sec:experiment}
-
-\subsection{Comparing computer performance against the database of human
-evaluation}\label{comparing-computer-performance-against-the-database-of-human-evaluation}
-
-A database of human evaluations of scatterplots is available from prior
-studies. This is used to compare the performance of the computer model.
-The computer model is trained on a broader parameter simulation
-framework and tested on the same data as the human evaluations.
-
-\subsubsection{Amazon Mechanical Turk
-study}\label{amazon-mechanical-turk-study}
-
-\begin{figure*}[h]
-\centerline{\includegraphics[width=15cm]{figures/plot_turk2_300_350_12_3.png}}
-\caption{One of 70 lineups used in experiment 2 Majumder et al (2012). Of the 65 people who examined the lineup,  63 selected the data plot, which is in position 20.}
-\label{expt2}
-\end{figure*}
-
-A large database of results from human subjects was collected examine
+A large database of results from human subjects was collected examining
 the performance of the lineup protocol relative to classical tests. The
 work is published in \citet{MM13}. This database forms the basis of the
 test set used to examine the computer model performance.
 
-In \citet{MM13}, ``three experiments were conducted to evaluate the
-effectiveness of the lineup protocol relative to the equivalent test
-statistic used in the regression setting.'' In each experiment, they
+In \citet{MM13}, \emph{``three experiments were conducted to evaluate
+the effectiveness of the lineup protocol relative to the equivalent test
+statistic used in the regression setting.''} In each experiment, they
 simulated data from a controlled setting and then generated associated
 lineup for the human to evaluate. The human subjects were hired from
-Amazon Mechanical Turk where is a marketplace for work that requires
-human intelligence. \citep{amazon}
+Amazon Mechanical Turk, a marketplace for work that requires human
+intelligence. \citep{amazon}
 
 The controlled model in their first experiment is
 \[Y_i=\beta_0+\beta_1 X_{i1}+\beta_2 X_{i2}+\epsilon_i\] where
@@ -384,104 +267,276 @@ actual data were in fact generated from two different specifications.
 \] where
 \(\epsilon_i \sim N(0,\sigma), \eta_i \sim N(0,\sigma/3), \ \mu=-1.75, \ \beta\in(0.1, 0.4, 0.75, 1.25, 1.5, 2.25)\).
 And \(n=100, n_c=15, alpha=0, \lambda=10, \sigma=3.5\). The null plots
-were generated from \(N(0,\hat{\sigma}^2)\).
+were generated from \(N(0,\hat{\sigma}^2)\). Other parameters in the
+``actual'' data sets of Turk experiment one and Turk experiment two are
+shown in table 1.
 
-Other parameters in the ``actual'' data sets of Turk experiment one and
-Turk experiment two are shown in table 2.1. In this study, we will
-mainly focus on their second experiment and use its database to form our
-first comparison experiment. This experiment 2 utilized 70 lineups of
-size 20 plot, with varying degrees of departure from the
-\(H_o: \beta_k=0\). There were 351 evaluations by human subjects. These
-results will be used for comparison with the deep learning model. An
-example lineup question in Turk experiment 2 is shown in Figure
-\ref{expt2}. For this lineup, 63 of the 65 people who examined it
-selected the data plot (position 20) from the null plots. There is clear
-evidence that the data displayed in plot 20 is not from
-\(H_o: \beta_k=0\).
-
-\begin{longtable}[]{@{}ccc@{}}
-\caption{Combination of parameter values used for simulation in Turk's
-study. (continued below)}\tabularnewline
+\begin{longtable}[]{@{}cccc@{}}
+\caption{Parameter values for simulation in Turk's
+study.}\tabularnewline
 \toprule
-\begin{minipage}[b]{0.23\columnwidth}\centering\strut
+\begin{minipage}[b]{0.20\columnwidth}\centering\strut
 Sample size (n)\strut
-\end{minipage} & \begin{minipage}[b]{0.23\columnwidth}\centering\strut
+\end{minipage} & \begin{minipage}[b]{0.20\columnwidth}\centering\strut
 Error SD(sigma)\strut
-\end{minipage} & \begin{minipage}[b]{0.25\columnwidth}\centering\strut
-Experiment 1 beta2\strut
+\end{minipage} & \begin{minipage}[b]{0.15\columnwidth}\centering\strut
+Exp 1-beta2\strut
+\end{minipage} & \begin{minipage}[b]{0.33\columnwidth}\centering\strut
+Exp 2-beta1\strut
 \end{minipage}\tabularnewline
 \midrule
 \endfirsthead
 \toprule
-\begin{minipage}[b]{0.23\columnwidth}\centering\strut
+\begin{minipage}[b]{0.20\columnwidth}\centering\strut
 Sample size (n)\strut
-\end{minipage} & \begin{minipage}[b]{0.23\columnwidth}\centering\strut
+\end{minipage} & \begin{minipage}[b]{0.20\columnwidth}\centering\strut
 Error SD(sigma)\strut
-\end{minipage} & \begin{minipage}[b]{0.25\columnwidth}\centering\strut
-Experiment 1 beta2\strut
+\end{minipage} & \begin{minipage}[b]{0.15\columnwidth}\centering\strut
+Exp 1-beta2\strut
+\end{minipage} & \begin{minipage}[b]{0.33\columnwidth}\centering\strut
+Exp 2-beta1\strut
 \end{minipage}\tabularnewline
 \midrule
 \endhead
-\begin{minipage}[t]{0.23\columnwidth}\centering\strut
+\begin{minipage}[t]{0.20\columnwidth}\centering\strut
 100\strut
-\end{minipage} & \begin{minipage}[t]{0.23\columnwidth}\centering\strut
+\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\centering\strut
 5\strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\centering\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\centering\strut
 0,1,3,5,8\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.23\columnwidth}\centering\strut
-100\strut
-\end{minipage} & \begin{minipage}[t]{0.23\columnwidth}\centering\strut
-12\strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\centering\strut
-1,3,8,10,16\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.23\columnwidth}\centering\strut
-300\strut
-\end{minipage} & \begin{minipage}[t]{0.23\columnwidth}\centering\strut
-5\strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\centering\strut
-0,1,2,3,5\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.23\columnwidth}\centering\strut
-300\strut
-\end{minipage} & \begin{minipage}[t]{0.23\columnwidth}\centering\strut
-12\strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\centering\strut
-1,3,5,7,10\strut
-\end{minipage}\tabularnewline
-\bottomrule
-\end{longtable}
-
-\begin{longtable}[]{@{}c@{}}
-\toprule
-\begin{minipage}[b]{0.40\columnwidth}\centering\strut
-Experiment 2 beta1\strut
-\end{minipage}\tabularnewline
-\midrule
-\endhead
-\begin{minipage}[t]{0.40\columnwidth}\centering\strut
+\end{minipage} & \begin{minipage}[t]{0.33\columnwidth}\centering\strut
 0.25, 0.75, 1.25, 1.75, 2.75\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.40\columnwidth}\centering\strut
+\begin{minipage}[t]{0.20\columnwidth}\centering\strut
+100\strut
+\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\centering\strut
+12\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\centering\strut
+1,3,8,10,16\strut
+\end{minipage} & \begin{minipage}[t]{0.33\columnwidth}\centering\strut
 0.5, 1.5, 3.5, 4.5, 6\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.40\columnwidth}\centering\strut
+\begin{minipage}[t]{0.20\columnwidth}\centering\strut
+300\strut
+\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\centering\strut
+5\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\centering\strut
+0,1,2,3,5\strut
+\end{minipage} & \begin{minipage}[t]{0.33\columnwidth}\centering\strut
 0.1, 0.4, 0.7, 1, 1.5\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.40\columnwidth}\centering\strut
+\begin{minipage}[t]{0.20\columnwidth}\centering\strut
+300\strut
+\end{minipage} & \begin{minipage}[t]{0.20\columnwidth}\centering\strut
+12\strut
+\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\centering\strut
+1,3,5,7,10\strut
+\end{minipage} & \begin{minipage}[t]{0.33\columnwidth}\centering\strut
 0, 0.8, 1.75, 2.3, 3.5\strut
 \end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
-\subsubsection{Linear relationship
-simulation}\label{linear-relationship-simulation}
+Their second experiment utilized 70 lineups of size 20 plot, with
+varying degrees of departure from the \(H_o: \beta_k=0\). There were 351
+evaluations by human subjects. These results will be used in this study
+for comparison with the deep learning model. An example lineup question
+in Turk experiment 2 is shown in Figure \ref{expt2}. For this lineup, 63
+of the 65 people who examined it selected the data plot (position 20)
+from the null plots. There is clear evidence that the data displayed in
+plot 20 is not from \(H_o: \beta_k=0\). The main procedures of the human
+evaluating lineup are given in figure \ref{dghm}. ``Real data'' and
+``null data'' stand for datasets simulated under the alternative
+hypothesis and the null hypothesis respectively.
 
-The design for our model under the alternative hypothesis in the first
-experiment is similar to what \citet{SIM18} did in his blog. But the
-parameters are tailored to compare the computer performance with the
-Turk study results.
+\begin{figure*}[h]
+\centerline{\includegraphics[width=15cm]{figures/plot_turk2_300_350_12_3.png}}
+\caption{One of 70 lineups used in experiment 2 Majumder et al (2012). Of the 65 people who examined the lineup,  63 selected the data plot, which is in position 20.}
+\label{expt2}
+\end{figure*}
+
+\begin{figure*}[h]
+\centerline{\includegraphics[width=15cm]{figures/diaghm.png}}
+\caption{Diagram illustrating the process of human subject evaluation of lineups, and how performance is computed.}
+\label{dghm}
+\end{figure*}
+
+\subsection{The Computer Model}\label{the-computer-model}
+
+The model we use is the convolutional neural networks, also known as
+convnets, a type of deep-learning model \emph{``almost universally used
+in computer vision applications''} \citep{DLR18}. The very first
+convolutional neural networks, called the ``LeNet5'' which was born in
+1994, propelled the field of deep learning. However, this technique was
+in incubation from 1998 to 2010. In recent years, with the increasing
+data availability and more advanced technology, the design of the neural
+network architecture became more and more successful. Many types of
+neural network architectures have been developed since then, such as the
+``Dan Ciresan Net'' which enabled the implementation of GPU for the
+first time and the ``AlexNet'', which used the so-called ``ReLU''
+function as the activation function and started a small revolution in
+the deep learning world. \citep{cnn2017} Basically convolutional neural
+networks has two interesting properties: ``the patterns they learn are
+translation invariant'', and ``they can learn spatial hierarchies of
+patterns'' \citep{DLR18}. The first property implies that once the model
+learns how to recognize the linear patterns, it can detect these
+patterns regardless of their direction, thus handling negative/positive
+relationship automatically in our case. The architecture used in this
+study is a fundamental one.
+
+Unlike the classical programming where human input rules, in deep
+learning paradigm, we provide data and the answers associated with the
+data. Deep learning algorithm will output the rules, and these rules can
+then be used on new data to make predictions. One can think of the deep
+learning neural network as a complex nonlinear model which could
+estimate millions of parameters (\(\textbf{w}\)) with a big enough
+dataset. As usual regression problem, to get the estimates of unknown
+parameters (\(\textbf{w}\)), we need to provide the model with the
+dependent variable (\(y_i\)) and the independent variables
+(\(\textbf{x}_i\)). In this case, the independent variable will be the
+images of data plots (in forms of matrices) simulated from the null
+distribution and the alternative distribution, and dependent variable
+will be the labels of that plot indicating the true relationship of the
+original data. The estimation method for the deep-learning model is
+called ``backpropagation'' algorithm which is a way to train chains of
+parametric operations using gradient-descent optimization. The
+gradient-descent optimizer is meant to find the set of parameters such
+that the cost function reaches its minimum. The form of the cost
+functions or loss function is determined per each question. In this
+paper, the deep learning model is expected to complete binary
+classification task, detect ``linearly correlated variables'' from
+``unrelated variables''. As introduced by \citet{DLR18},
+\emph{``crossentropy is usually the best choice (as the loss function)
+when you're dealing with models that output probabilities''}. Originated
+from Information Theory, crossentropy is a quantity measuring the
+distance between probability distributions. In deep learning world, it
+measures the distance between the true distribution and the predictions.
+Therefore, in this paper, the binary crossentropy loss function will be
+used. The associated cost function is of the form,
+\[J(\textbf{w})=- \frac{1}{N}\sum_{i=1}^N\left(  
+\ y_i\ log\hat{y_i}+(1-y_i)\ log(1-\hat{y_i})  
+\right)\] where
+\(\hat{y_i} = g(\textbf{w} \times \textbf{x}_i) = \frac{1}{1+e^{-\textbf{w} \times \textbf{x}_i}}\)
+and \(g(z)\) is the logistic function. Once we have the estimated
+parameters (\(\hat{\textbf{w}}\)), we then can use them to classify
+unseen data plots, e.g.~to perform a hypothesis test.
+
+The main procedures involved in constructing and selecting a convnets
+model are shown in figure \ref{dgpc}. The convnets is trained on
+``train'' and ``validation'' set. A certain number of iterations over
+all samples are done, the fitted convnets given by each iteration are
+saved, one best model is chosen as the representative for the computer
+according to the overall accuracy on the unseen ``test'' set.
+
+All convolutional neural network related work is done by the Keras
+\citep{keras} package in R \citep{R}, which interfaces to the python
+software. The R package ggplot2 \citep{ggplot2} is used to generate the
+plots. All plots are resized to \(150\times 150\) pixel and saved as
+png. This size is similar to the plot size used in the lineup for human
+evaluation.
+
+\begin{figure*}[h]
+\centerline{\includegraphics[width=15cm]{figures/diagpc.png}}
+\caption{Diagram illustrating the training, diagnosis and choice of the computer model. Based on 480,000 simulated data sets used to create $150\times 150$ pixel images, divided into train, validation and test sets.}
+\label{dgpc}
+\end{figure*}
+
+\emph{``A convnets takes as input tensors of shape (image height, image
+width, image channels)''} \citep{DLR18}. The channels are normally equal
+to three for RGB. In our case, the input tensors are of shape
+\(150 \times 150 \times 1\). The channel is equal to one because the
+input data is grayscale images. Therefore, the convnet will be
+configured to process inputs of size (150, 150, 1). We'll do this by
+passing the argument input\_shape = c(150, 150, 1) to the first layer.
+The R codes below are used to build the convnets in R. From figure
+\ref{modelstruc}, the output shape changes after every layer of ``conv''
+and ``pooling'' operations. The original \(150 \times 150 \times 1\)
+image is finally sliced into a \(7 \times 7 \times 128\) object (3D
+tensor). The figure \ref{diagconv} describes how ``convolution'' and
+``max pooling'' operation works. By ``convolution'' the image matrix is
+multiplied by a filter, different filter gives different output matrix
+which extracting different features from the image. Max pooling select
+the max number within a certain area. Then we need to flatten these 3D
+tensor into 1D tensor so that they can be processed by the ``sigmoid''
+function in the end. The ``sigmoid'' is, in fact, a special case of
+logistic function. \(S(\textbf{x})=\frac{1}{1+e^{-\textbf{x}}}\). From
+this model structure, we can also see that a total number of 3,452,545
+parameters need to be estimated, this is done by gradient descent. 10
+epochs (1 epoch = 1 iteration over all samples) are done for training in
+our first experiment. The model specifications given by each epoch are
+saved, the one gives the overall highest accuracy is chosen to represent
+the computer.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(keras)}
+\NormalTok{model <-}\StringTok{ }\KeywordTok{keras_model_sequential}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{layer_conv_2d}\NormalTok{(}\DataTypeTok{filters =} \DecValTok{32}\NormalTok{, }\DataTypeTok{kernel_size =} \KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{), }
+                \DataTypeTok{activation =} \StringTok{"relu"}\NormalTok{,}
+                \DataTypeTok{input_shape =} \KeywordTok{c}\NormalTok{(}\DecValTok{150}\NormalTok{, }\DecValTok{150}\NormalTok{, }\DecValTok{1}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{layer_max_pooling_2d}\NormalTok{(}\DataTypeTok{pool_size =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{layer_conv_2d}\NormalTok{(}\DataTypeTok{filters =} \DecValTok{64}\NormalTok{, }\DataTypeTok{kernel_size =} \KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{), }
+                \DataTypeTok{activation =} \StringTok{"relu"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{layer_max_pooling_2d}\NormalTok{(}\DataTypeTok{pool_size =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{layer_conv_2d}\NormalTok{(}\DataTypeTok{filters =} \DecValTok{128}\NormalTok{, }\DataTypeTok{kernel_size =} \KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{), }
+                \DataTypeTok{activation =} \StringTok{"relu"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{layer_max_pooling_2d}\NormalTok{(}\DataTypeTok{pool_size =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{layer_conv_2d}\NormalTok{(}\DataTypeTok{filters =} \DecValTok{128}\NormalTok{, }\DataTypeTok{kernel_size =} \KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{), }
+                \DataTypeTok{activation =} \StringTok{"relu"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{layer_max_pooling_2d}\NormalTok{(}\DataTypeTok{pool_size =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{layer_flatten}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{layer_dense}\NormalTok{(}\DataTypeTok{units =} \DecValTok{512}\NormalTok{, }\DataTypeTok{activation =} \StringTok{"relu"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{layer_dense}\NormalTok{(}\DataTypeTok{units =} \DecValTok{1}\NormalTok{, }\DataTypeTok{activation =} \StringTok{"sigmoid"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure*}[h]
+\centerline{\includegraphics[width=15cm]{figures/modelstruc.png}}
+\caption{The deep learning model structure used for the experiments.}
+\label{modelstruc}
+\end{figure*}
+
+\begin{figure*}[h]
+\centerline{\includegraphics[width=15cm]{figures/diagconv.png}}
+\caption{Illustration of convolution and pooling steps on an image. The convolution step applies a fixed number of filters to sliding windows of $3\times 3$ cells. Pooling applies a statistic to distinct $2\times 2$ tiling of the image. In our model, the statistic used is the maximum of the four values. These transformations are the pre-processing steps done on every image in the training sample, to fit the model, and also to the validation and test images prior to prediction. }
+\label{diagconv}
+\end{figure*}
+
+As for the time needed for computer training, since a large number of
+images are employed in this study, and we rely only on the CPU, 10-20
+hours is required for generating and saving all images, another 10-20
+hours will be necessary for the convnets model to be trained and tested.
+With an NVIDIA GPU, this duration will be shortened significantly.
+
+\subsection{Simulation}\label{simulation}
+
+In total 240,000 data sets are simulated under each the null and the
+alternative hypothesis. 100,000 of them are set apart for training.
+Another 40,000 of the data sets are set apart as the validation set in
+order to monitor during training the accuracy of the model on data it
+has never seen before. And the rest 100,000 data sets become the unseen
+test set. We make the test set relatively large that we can compare the
+performance of the convnet with the \(t\)-test with small variations. As
+for the labels given to each image, we use the true population as the
+samples' identification directly.
+
+\subsubsection{Under the Alternative
+Hypothesis}\label{under-the-alternative-hypothesis}
+
+For ease of exposition, the plots used for training and testing is the
+scatterplot between the dependent variable \(Y\) and the independent
+variable \(X\). It can also be considered as the residual plot of such
+data fitting to a constant model. Although only the simple regression
+model is considered in this paper, but many of the results can be
+generalized to other cases including multiple regression models. Because
+the ``statistics'' we use is the scatterplot, in terms of teaching the
+computer to recognize linear patterns from others, one variable is
+enough to generate different patterns. And this makes the design process
+much simpler.
+
+The design for our model under the alternative hypothesis is similar to
+what \citet{SIM18} did in his blog. But the parameters are tailored to
+compare the computer performance with the Turk study results.
 
 The model under the alternative is designed as:
 \[Y_i = \beta_0 + \beta_1 X_{i}  + \varepsilon_i, ~~i=1, \dots , n\] And
@@ -539,24 +594,24 @@ simulation, for computer model training. Good coverage is obtained
 across the parameter space.}
 \end{figure}
 
-\subsubsection{Null plot simulation}\label{null-plot-simulation}
+\subsubsection{Under the Null
+Hypothesis}\label{under-the-null-hypothesis}
 
-This is the null scenario in our first experiment, eg. the two variables
-under tested are independent of each other. If the data arise from this
-situation, then the data plots will not show any systematic patterns
-theoretically. It is true that there must be some undesired patterns
-formed out of randomness, especially when the sample size is small.
-Unlike what Simchoni did in his post, no conventional tests will be used
-to sort out the ``significant/insignificant'' samples. Because the
-answer to the question that if the deep learning model can distinguish
-from patterns formed by chance and by nature is also interesting. The
-model is designed the same as the linear model:
+When the two variables under tested are independent of each other, then
+the data plots will not show any systematic patterns theoretically. It
+is true that there must be some undesired patterns formed out of
+randomness, especially when the sample size is small. Unlike what
+Simchoni did in his post, no conventional tests will be used to sort out
+the ``significant/insignificant'' samples. Because the answer to the
+question that if the deep learning model can distinguish from patterns
+formed by chance and by nature is also interesting. The model is
+designed the same as the linear model:
 \[Y_i = \beta_0 + \beta_1 X_{i}  + \varepsilon_i, ~~i=1, \dots , n\]
 with elements of the model generated using the same specification as the
 linear model, except\\
 - \(\beta_1 = 0\)
 
-e.g.~the coefficient of \(X_i\) is always zero. So \(X\) and \(Y\) are
+Hence, the coefficient of \(X_i\) is always zero. So \(X\) and \(Y\) are
 uncorrelated of each other.
 
 Figure \ref{fig:norela} are four example plots generated using the
@@ -585,90 +640,9 @@ for computer model training. Good coverage is obtained across the
 parameter space.}
 \end{figure}
 
-\subsubsection{Computer model}\label{computer-model}
+\section{Results and Discussion}\label{results-and-discussion}
 
-All convolutional neural network related work is done by the Keras
-\citep{keras} package in R \citep{R}, which interfaces to the python
-software. The plots used for training and testing in this section is the
-scatterplot between the dependent variable Y and the independent
-variable X. It can also be considered as the residual plot of such data
-fitting to a constant model. The R package ggplot2 \citep{ggplot2} is
-used to generate the plots. All plots are resized to \(150\times 150\)
-pixel and saved as png. This size is similar to the plot size used in
-the lineup for human evaluation. As for the labels given to each image,
-we use the true population as the samples' identification directly.
-
-As mentioned above, 240,000 data sets are generated for each of the two
-groups in the first experiment. 100,000 of them are set apart for
-training. Another 40,000 of the data sets are set apart as the
-validation set in order to monitor during training the accuracy of the
-model on data it has never seen before. And the leftover (100,000 data
-sets) become the unseen test set. We make the test set so large that we
-can compare the performance of the convnet with the conventional t-test
-properly.
-
-``A convnets takes as input tensors of shape (image height, image width,
-image channels).''\citep{DLR18} The channels are normally equal to three
-for RGB. In our case, the input tensors are of shape
-\(150 \times 150 \times 1\). The channel is equal to one because the
-input data is grayscale images. Therefore, the convnet will be
-configured to process inputs of size (150, 150, 1). We'll do this by
-passing the argument input\_shape = c(150, 150, 1) to the first layer.
-The R codes below are used to build the convnets in R. From figure
-\ref{modelstruc}, the output shape changes after every layer of ``conv''
-and ``pooling'' operations. The original \(150 \times 150 \times 1\)
-image is finally sliced into a \(7 \times 7 \times 128\) object (3D
-tensor). The figure \ref{diagconv} describes how ``convolution'' and
-``max pooling'' operation works. By ``convolution'' the image matrix is
-multiplied by a filter, different filter gives different output matrix
-which extracting different features from the image. Max pooling select
-the max number within a certain area. Then we need to flatten these 3D
-tensor into 1D tensor so that they can be processed by the ``sigmoid''
-function in the end. The ``sigmoid'' is, in fact, a special case of
-logistic function. \(S(\textbf{x})=\frac{1}{1+e^{-\textbf{x}}}\). From
-this model structure, we can also see that a total number of 3,452,545
-parameters need to be estimated, this is done by gradient descent. 10
-epochs (1 epoch = 1 iteration over all samples) are done for training in
-our first experiment. The model specifications given by each epoch are
-saved, the one gives the overall highest accuracy is chosen to represent
-the computer.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(keras)}
-\NormalTok{model <-}\StringTok{ }\KeywordTok{keras_model_sequential}\NormalTok{() }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{layer_conv_2d}\NormalTok{(}\DataTypeTok{filters =} \DecValTok{32}\NormalTok{, }\DataTypeTok{kernel_size =} \KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{), }
-                \DataTypeTok{activation =} \StringTok{"relu"}\NormalTok{,}
-                \DataTypeTok{input_shape =} \KeywordTok{c}\NormalTok{(}\DecValTok{150}\NormalTok{, }\DecValTok{150}\NormalTok{, }\DecValTok{1}\NormalTok{)) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{layer_max_pooling_2d}\NormalTok{(}\DataTypeTok{pool_size =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{)) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{layer_conv_2d}\NormalTok{(}\DataTypeTok{filters =} \DecValTok{64}\NormalTok{, }\DataTypeTok{kernel_size =} \KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{), }
-                \DataTypeTok{activation =} \StringTok{"relu"}\NormalTok{) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{layer_max_pooling_2d}\NormalTok{(}\DataTypeTok{pool_size =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{)) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{layer_conv_2d}\NormalTok{(}\DataTypeTok{filters =} \DecValTok{128}\NormalTok{, }\DataTypeTok{kernel_size =} \KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{), }
-                \DataTypeTok{activation =} \StringTok{"relu"}\NormalTok{) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{layer_max_pooling_2d}\NormalTok{(}\DataTypeTok{pool_size =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{)) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{layer_conv_2d}\NormalTok{(}\DataTypeTok{filters =} \DecValTok{128}\NormalTok{, }\DataTypeTok{kernel_size =} \KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{), }
-                \DataTypeTok{activation =} \StringTok{"relu"}\NormalTok{) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{layer_max_pooling_2d}\NormalTok{(}\DataTypeTok{pool_size =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{)) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{layer_flatten}\NormalTok{() }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{layer_dense}\NormalTok{(}\DataTypeTok{units =} \DecValTok{512}\NormalTok{, }\DataTypeTok{activation =} \StringTok{"relu"}\NormalTok{) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{layer_dense}\NormalTok{(}\DataTypeTok{units =} \DecValTok{1}\NormalTok{, }\DataTypeTok{activation =} \StringTok{"sigmoid"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{figure*}[h]
-\centerline{\includegraphics[width=15cm]{figures/modelstruc.png}}
-\caption{The deep learning model structure used for both of the experiments.}
-\label{modelstruc}
-\end{figure*}
-
-\begin{figure*}[h]
-\centerline{\includegraphics[width=15cm]{figures/diagconv.png}}
-\caption{Illustration of convolution and pooling steps on an image. The convolution step applies a fixed number of filters to sliding windows of $3\times 3$ cells. Pooling applies a statistic to distinct $2\times 2$ tiling of the image. In our model, the statistic used is the maximum of the four values. These transformations are the pre-processing steps done on every image in the training sample, to fit the model, and also to the validation and test images prior to prediction. }
-\label{diagconv}
-\end{figure*}
-
-The plot of the training history (figure \ref{histlinear}) shows high
+The plot of the training history in figure \ref{histlinear} shows high
 accuracy achieved in both train and validation set (93\%-94\%); slight
 overfitting starts from the fourth epoch; the variation of the values of
 accuracy and loss in validation set are very small after the fourth
@@ -684,14 +658,11 @@ of each computer model tested on the ``linear data'' in the test set
 only. The t-test performance in this table is calculated at 5\%
 significance level.
 
-The 8th model is chosen according to the overall accuracy on the test
-set. We should note that since the majority of the data plots in Turk's
-experiment have been generated from linear relationships (when the
-alternative hypothesis is true), it is a disadvantage for the computer
-comparing in terms of being tested on the Turk's data. Because of the
-difference in \(\alpha\) (\(\alpha \approx 0.02\) for the 8th computer
-model) the 5\% significant t-test and 5\% human evaluations may have
-higher power than the computer model.
+\begin{figure*}[h]
+\centerline{\includegraphics[width=15cm]{figures/linear_history_plot.png}}
+\caption{Training and validation metrics of linear vs. null model in our first experiment. The top plot is the accuracy achieved in train and validaton sets, while the bottom plot is the loss. Red presents model performance in train set while green presents validation.}
+\label{histlinear}
+\end{figure*}
 
 \begin{table}[ht]
 \begin{center}
@@ -708,8 +679,14 @@ Tests & Linear & Null & Overall \\\hline
 \label{checkpoints}
 \end{table}
 
-\section{Results}
-\label{sec:results}
+The 8th model is chosen according to the overall accuracy on the test
+set. We should note that since the majority of the real data plots in
+Turk's experiment have been generated from linear relationships (when
+the alternative hypothesis is true), it is a disadvantage for the
+computer comparing in terms of being tested on the Turk's data. Because
+the \(\alpha\) is approximately 2\% for the 8th computer model, the 5\%
+significant t-test and 5\% human evaluations may have higher power than
+the computer model.
 
 The performance of the computer model for the Turk study data is tested
 in three steps:
@@ -752,11 +729,11 @@ same for all test methods. However, we do not have direct control over
 the \(\alpha\) of the computer model. Because the \(\alpha\) estimated
 from the computer model is close to 2\%. Therefore, 2\% significant
 t-test and 2\% significant human conclusion are also included to give a
-complete picture of the comparison. The comparing result (table 2.3) is
-interesting. Human achieves the highest accuracy, and the conclusion
-from the human evaluation is robust to smaller p-values; 5\% significant
-t-test is the second best, 2\% significant t-test and the computer model
-give the same results.
+complete picture of the comparison. The comparing result given in table
+3 is interesting. Human achieves the highest accuracy, and the
+conclusion from the human evaluation is robust to smaller p-values; 5\%
+significant t-test is the second best, 2\% significant t-test and the
+computer model give the same results.
 
 \begin{longtable}[]{@{}cccc@{}}
 \caption{Accuracy of testing the 70 data plots evaluated by human
@@ -833,39 +810,33 @@ T-test 2\%\strut
 \bottomrule
 \end{longtable}
 
-\subsection{Aside discussion}\label{aside-discussion}
+Under the condition specified for simulation, the conventional t-test is
+known to be the uniformly most powerful (UMP) test in terms of detecting
+the linear relationship according to the Neyman--Pearson lemma.
+\citep{Neyman289} Although human achieved the best performance in the
+Turk experiment dataset, it does not mean computer does badly since the
+Turk experiment dataset only contains 70 plots. As we can see from table
+\ref{checkpoints}, t-test and convnets behave quite similarly on both
+the test set and the Turk's experiment data.
 
-Under the condition specified in this chapter, the conventional t-test
-is supposed to be the uniformly most powerful (UMP) test in terms of
-detecting the linear relationship according to the Neyman--Pearson
-lemma. \citep{Neyman289} Although human achieved the best performance in
-the Turk experiment dataset, it does not mean computer does badly since
-the Turk experiment dataset only contains 70 plots. As we can see from
-table \ref{checkpoints}, t-test and convnets behave quite similarly on
-both the test data and Turk's experiment data. Given our test set is
-large enough (200,000 images totally), it is reasonable to assume that
-the convnets is, in fact, implementing the t-test or trying to approach
+To check if the \(t\)-test and the convnets do perform similarly, we
+calculated the accuracy of the \(t\)-test again, with different
+\(\alpha\), from 0.005 to 0.1 with 0.005 increments, on all 200,000 test
+sets. The estimated power and overall accuracy were recorded. When
+\(\alpha=0.015\), the overall accuracy reaches its maximum. This value
+approximately coincides with the \(\alpha\) chosen by the convnets. And
+since the \(\alpha\) of convnets is from 0.0142 to 0.0347 on the test
+set, we truncated the t-test data to create figure \ref{fig:ttdl}. The
+upper dots represent overall accuracy achieved by convnets (red) and
+t-test (green), while the lower dots stand for the estimated power in
+the test set. The smooth line overlaid aids the eye in seeing patterns.
+From this graph, we can see the convnets and t-test perform very
+similarly, while t-test has overall better performance.
+
+Given the size of our test set (200,000 images totally), it is
+reasonable to assume that the convnets is, in fact, trying to approach
 the t-test. In other words, the best strategy the convnets learned, in
-this case, may turn out to be t-test.
-
-To check this idea, we calculated the accuracy of t-test again, with
-different \(\alpha\) (from 0.005 to 0.1 with 0.005 increments) on all
-200,000 test sets. The estimated power and overall accuracy were
-recorded. When \(\alpha=0.015\), the overall accuracy reaches its
-maximum. This value approximately coincides with the \(\alpha\) chosen
-by the convnets. And since the \(\alpha\) of convnets is from 0.0142 to
-0.0347 on the test set, we truncated the t-test data to create figure
-\ref{fig:ttdl}. The upper dots represent overall accuracy achieved by
-convnets (red) and t-test (green), while the lower dots stand for the
-estimated power in the test set. The smooth line overlaid aids the eye
-in seeing patterns. From this graph, we can see the convnets and t-test
-perform very similarly, while t-test has overall better performance.
-
-\begin{figure*}[h]
-\centerline{\includegraphics[width=15cm]{figures/linear_history_plot.png}}
-\caption{Training and validation metrics of linear vs. null model in our first experiment. The top plot is the accuracy achieved in train and validaton sets, while the bottom plot is the loss. Red presents model performance in train set while green presents validation.}
-\label{histlinear}
-\end{figure*}
+this case, may be close to the \(t\)-test, the UMP.
 
 \begin{figure}
 
@@ -875,6 +846,39 @@ perform very similarly, while t-test has overall better performance.
 
 \caption{Comparison between computer model and t-test for alpha in (0.01, 0.04), they perform very similarly, but t-test has overall better performance.}\label{fig:ttdl}
 \end{figure}
+
+In summary, performance of the convnets on testing the linear vs no
+structure is comparable to both the human subjects' results and the
+\(t\)-test.
+
+Although constructing the assumptions used for simulation and the
+implications for violation maybe challenging. This study gives hope to
+the future utilization of convnets in reading the residual plot. Unlike
+the conventional distribution tests, convnets does not require
+convoluted mathematical derivations and can be applied to any
+visualizable problems. Compared to human, the convnets is more stable in
+that it always gives consistent prediction once it is well trained while
+different groups of people may have different opinions on one plot. In
+addition, the computer training and testing can be done by a single
+computer which barely costs anything (other than our genuine efforts)
+while human evaluations could be much more expensive.
+
+On the other hand, the computer also has pitfalls. Its ability is
+limited to the patterns provided by the training. The more patterns we
+want the convnets to recognize, the more structures we need to feed it.
+As for the future study, more types of structure could be considered,
+for example, testing heteroskedasticity, non-linear relationship,
+outliers, etc. The binary classification can also be extended into a
+multiclass classification, e.g.~one convnets can be trained to recognize
+several departures from the null. What's more, to provide a more
+reliable comparison between human and computers, a larger human
+experiment is required. For an even further step, the convnets can be
+designed for even more general hypothesis testing purposes, the biggest
+challenge would be finding the most appropriate plot (the test
+statistic) which can show the key features for certain tests. For
+instance, if we are interested in telling a time series data with unit
+root from a trend stationary one, the most suitable plot may be the time
+plot.
 
 \bibliographystyle{agsm}
 \bibliography{bibliography.bib}
