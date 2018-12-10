@@ -13,9 +13,11 @@ authors:
   affiliation: Professor of Business Analytics, Monash University
 
 keywords:
-- Model Diagnosis
-- Computer Vision
-- Deep Learning
+- model diagnostics
+- computer vision
+- statistical graphics
+- data science
+- exploratory data analysis
 
 abstract: |
   Residuals plots are a primary means to diagnose statistical models. It requires human evaluation to determine if the structure in the plot is consistent with a random variation or not. If not, then the diagnosis is that the model has not adequately captured the relationships between response and explanatory variable in the data. This thesis develops a computer vision model to read residual plots. It compares results with a large database of human evaluations. The evaluations were conducted using a protocol called the "lineup" which places residual plots in a formal framework for statistical hypothesis testing. The comparison between computer and human is made on a very restricted and controlled set of residual plot structures. A new small human subject study is also conducted to compare human vs. computer in reading heteroscedasticity.
@@ -31,7 +33,7 @@ output:
 knitr::opts_chunk$set(echo = FALSE, message=FALSE, cache=TRUE)
 library(tidyverse)
 library(nullabor)
-library(keras)
+#library(keras)
 library(broom)
 library(knitr)
 library(datasauRus)
@@ -41,9 +43,10 @@ library(pander)
 # Introduction  
 
 
-<!--background-->The derivation of hypothesis tests and their asymptotic distributions constitute a considerable part of the statistics literature. However, the derivation is often complex and the resulting test may lack power. For example, in time series analysis, the commonly used unit root tests all suffer from low power in distinguishing the unit root null from stationary alternatives. In addition, data plots show a lot more information than a single statistic. A good illustration would be Anscombe's Quartet. *"It is a set of four distinct data sets each consisting of 11 (x,y) pairs where each dataset produces the same summary statistics (mean, standard deviation and correlation) while producing vastly different plots"* [@ANS73]. Matejka and Fitzmaurice also did an interesting study on this issue, they used 'datasaurus' data from @DS16 and generated a series of data with same statistics but very different plots as shown in figure 1 [@JM17]. Instead of using single statistics, if the information in the plots can be utilized in performing hypothesis tests, the power (1-$\beta$) may be improved.
+<!--background-->The derivation of hypothesis tests and their asymptotic distributions constitute a considerable part of the statistics literature. However, the derivation is often complex and the resulting test may lack power. For example, in time series analysis, the commonly used unit root tests all suffer from low power in distinguishing the unit root null from stationary alternatives. Conversely, data plots show a lot more information than a single statistic. A classical illustration is be Anscombe's Quartet [@ANS73] which contains four distinct data sets each consisting of 11 $(x,y)$ pairs which have the same summary statistics (mean, standard deviation and correlation) but radically different structure. This idea was taken further by @DS16 creating the 'datasaurus' data (adapted from @DS16), containing a baker's dozen pairs of variables with a variety of structure including a T-rex dinosaur head, all having the same summary statistics. It has been made available in an R package by @Locke18.  Instead of being contained to numerical statistics, if the data plot is considered a statistic and utilized in performing hypothesis tests, the power may be improved.
 
-```{r saurus, fig.width=6, fig.height=7, fig.cap="Each dataset has the same summary statistics to two decimal places: (E(x)=54.26, E(y)=47.83, Pearson’s r=, sd(x)=16.76, sd(y)=26.93"}
+<!-- no need to show this plot -->
+```{r saurus, eval=FALSE, fig.width=6, fig.height=7, fig.cap="Each dataset has the same summary statistics to two decimal places: (E(x)=54.26, E(y)=47.83, Pearson’s r=, sd(x)=16.76, sd(y)=26.93"}
 ggplot(datasaurus_dozen, aes(x = x, y = y, colour = dataset)) +
   geom_point() +
   theme_void() +
@@ -52,7 +55,7 @@ ggplot(datasaurus_dozen, aes(x = x, y = y, colour = dataset)) +
   facet_wrap( ~ dataset, ncol = 3)
 ```
 
-<!--relevant study-->Former studies have shown that human eyes are sensitive to the systematic patterns in data plots. With proper manipulation, visualized plots can be used as test statistics and perform a valid hypothesis test. One example of these protocols that provides inferential validity is called "lineup" which was introduced by @HW10. *"The protocol consists of generating 19 null plots (could be other numbers), inserting the plot of the real data in a random location among the null plots and asking the human viewer to single out one of the 20 plots as most different from the others"* [@HW10]. If the real plot is chosen, it means the real data is likely to be different from the null hypothesis, so we reject the null hypothesis with 5% chance to be wrong (Type I error). Because if all 20 plots are generated from the null distribution, the chance of one plot being picked is $1/20$. With the assistance of "lineup", we avoid falling into the trap of apophenia where we see patterns in random noise. This protocol has been proved to be valid and powerful theoretically as well as practically through human experiments [@MM13]. The human factors that may influence visual statistical inference were also investigated by @human2014. The experiments in @human2014 suggest that *"individual skills vary substantially, but demographics do not have a huge effect on performance."* Although there are some statistically significant factors such as "having a graduate degree" and "living country", the effects of these factors are minimal. These results demonstrate the robustness of the test against different human factors. Figure 2 is an example of the lineup. Which plot do you think is the most different? If you choose plot one, we are 95% confident to reject the no-relationship assumption between the two variables, "hp" and "disp" [@SIM18]. The lineup protocol can also be used for other types of testing by choosing different types of plot. For example, normality can be tested using QQ plot; the difference in mean can be tested using box plot.
+<!--relevant study--> The lineup protocol introduced by @BCHLLSW09 does precisely this, it outlines a procedure in which data plots can be treated as test statistics in a formal hypothesis testing framework. The protocol consists of generating $(m-1)$ null plots, inserting the data plot in a random location among the null plots and asking the human viewer to single out the plot that is most different from the others. If the data plot is chosen, it means the data is unlikely to have arisen from the null hypothesis, so we reject the null hypothesis with $(1/m)$% chance to be wrong (Type I error). If all plots are generated from the null distribution, the chance of one plot being picked randomly is $1/m$. With the assistance of lineup, we avoid falling into the trap of apophenia where we see patterns in random noise, and it helps to examine complex structure for which there is no adequate statistical test. This protocol has been proved to be valid and powerful theoretically and practically through human experiments [@MM13]. The human factors that may influence visual statistical inference were also investigated by @human2014. The experiments in @human2014 suggest that *"individual skills vary substantially, but demographics do not have a huge effect on performance."* These results demonstrate the robustness of the test against different human factors. Figure \ref{fig:lineup} is an example of the lineup. Which plot do you think is the most different? If you choose plot one, we are 95% confident to reject the no-relationship assumption between the two variables, "hp" and "disp" [@SIM18]. The lineup protocol can be used for a variety of plot types (XXX reference Adam Loy's diagnostics for hierarchical models), and also for systematically determining whether one plot design is better than another (XXX reference Hofmann, Follett, Cook on comparing designs). 
 
 ```{r lineup, message=FALSE, fig.cap="Scatterplot lineup example: one plot is the data, the rest are generated from a null model assuming no relationship between the two variables. In this lineup it is easy to see that plot 1, which is the data plot, is different from the rest.", fig.height=6, fig.width=6}
 lineup_data_mtcars <- lineup(null_permute("hp"), mtcars, pos = 1)
@@ -62,13 +65,13 @@ ggplot(lineup_data_mtcars, aes(disp, hp)) +
   facet_wrap(~ .sample)
 ```
 
-<!--our study-->The question that arises today is whether the human evaluation can be aided and supplemented by computer. If it is feasible, we can have a computer process a lot more data than a human can manage. Thus, the cost of rendering visual inference will become much lower. Therefore, in this study, we introduce the computer vision technique to test the null of no structure against linear patterns in a scatter plot, as an alternative to the conventional $t$-test. To be more specific, the hypothesis we are trying to test is:
+<!--our study-->The question that arises today is whether the human evaluation can be aided and supplemented by computer. If it is feasible, we can have a computer process a lot more data than a human can manage. Thus, the cost of rendering visual inference will become much lower. In this study, we examine the computer vision model to test the null of no structure against linear patterns in a scatter plot, as an alternative to the conventional $t$-test. To be more specific, the hypothesis we are trying to test is:
 
 $H_0$: There are no relationships between the two variables in the scatter plot.
 
 $H_1$: There is a linear relationship between the two variables in the scatter plot where all Gauss-Markov assumptions are met.
 
-The accuracy of the computer model is compared to both a database of human evaluations from @MM13 and the $t$-test. The motivation for the task is provided in a blog post by Giora Simchoni [@SIM18]. He has designed a deep learning model to test the significance of the linear relationship between two variables for samples of size 50. The model reached over 93% accuracy on unseen test data. He also mentioned that the computer failed to pick up a strong non-linear relationship even though the Pearson'r is as high as -0.84 [@SIM18]. As Simchoni explained in his article, the model can only distinguish linear relationship from no-relationship as trained. However, we think this fact is just another example reflecting the importance of visualization as we discussed above. A strong correlation does not necessarily mean a linear relationship. We should always refer to the plot before making any statement. In addition, if we require the model to be more flexible, it can be realised by adjusting the training design accordingly.
+The accuracy of the computer model is compared to both a database of human evaluations from @MM13 and the $t$-test. The motivation for the task is provided in a blog post by Giora Simchoni [@SIM18]. He has designed a deep learning model to test the significance of the linear relationship between two variables for samples of size 50. The model reached over 93% accuracy on unseen test data. He also mentioned that the computer failed to pick up a strong non-linear relationship even though the Pearson's is as high as -0.84 [@SIM18]. As Simchoni explained in his article, the model can only distinguish linear relationship from no-relationship as trained. However, this fact is just another example reflecting the importance of visualization -- a strong correlation does not necessarily mean a linear relationship -- and a broadly applicable computer model would need to be trained on all sorts of structure. 
 
 # Experimental Methods  
 
@@ -138,7 +141,7 @@ All convolutional neural network related work is done by the Keras [@keras] pack
 
 *"A convnets takes as input tensors of shape (image height, image width, image channels)"* [@DLR18]. The channels are normally equal to three for RGB. In our case, the input tensors are of shape $150 \times 150 \times 1$. The channel is equal to one because the input data is grayscale images. Therefore, the convnet will be configured to process inputs of size (150, 150, 1). We’ll do this by passing the argument input_shape = c(150, 150, 1) to the first layer. The R codes below are used to build the convnets in R. From figure \ref{modelstruc}, the output shape changes after every layer of "conv" and "pooling" operations. The original $150 \times 150 \times 1$ image is finally sliced into a $7 \times 7 \times 128$ object (3D tensor). The figure \ref{diagconv} describes how "convolution" and "max pooling" operation works. By "convolution" the image matrix is multiplied by a filter, different filter gives different output matrix which extracting different features from the image. Max pooling select the max number within a certain area. Then we need to flatten these 3D tensor into 1D tensor so that they can be processed by the "sigmoid" function in the end. The "sigmoid" is, in fact, a special case of logistic function. $S(\textbf{x})=\frac{1}{1+e^{-\textbf{x}}}$. From this model structure, we can also see that a total number of 3,452,545 parameters need to be estimated, this is done by gradient descent. 10 epochs (1 epoch = 1 iteration over all samples) are done for training in our first experiment. The model specifications given by each epoch are saved, the one gives the overall highest accuracy is chosen to represent the computer. 
 
-```{r modelstructure, echo=TRUE, fig.height=6, results='none', warning=FALSE, fig.cap="R codes used to build convolutional neural network."}
+```{r modelstructure, echo=TRUE, eval=FALSE, fig.height=6, results='none', warning=FALSE, fig.cap="R codes used to build convolutional neural network."}
 library(keras)
 model <- keras_model_sequential() %>%
   layer_conv_2d(filters = 32, kernel_size = c(3, 3), 

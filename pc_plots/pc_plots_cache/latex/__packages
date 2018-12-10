@@ -9,11 +9,8 @@ dplyr
 stringr
 forcats
 nullabor
-keras
 broom
 knitr
 datasauRus
-gridExtra
-bindrcpp
-reshape2
 pander
+gridExtra
